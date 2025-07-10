@@ -1,27 +1,45 @@
-const {  Router} = require("express")
+const { Router } = require("express")
 const User = require("../models/users")
-console.log("MatchPassword exists?", typeof User.matchPassword); // should print 'function'
 
 const router = Router();
 
 router.get("/signin", (req, res) => {
-    return res.render("signin");
+    try {
+        console.log("Rendering signin page");
+        return res.render("signin");
+    }
+    catch (err) {
+        console.error("Render failed:", err);
+        // if (!res.headersSent) {
+        //     return res.status(500).send("View render failed");
+        // }
+    }
 });
+
 
 router.get("/signup", (req, res) => {
     return res.render("signup");
 });
 
-router.post("/signin", async(req, res) => {
+router.post("/signin", async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.matchPassword(email, password);
+    try {
+        const token = await User.matchPasswordAndGenerateToken(email, password);
 
-    console.log("User", user);
-    return res.redirect("/");
+        return res.cookie("token", token).redirect("/");
+    } catch (error) {
+        console.log(error);
+        return res.render("signin", {
+            error: "Invalid Credentials"
+        });
+    }
 })
 
 router.post("/signup", async (req, res) => {
     const { fullName, email, password } = req.body;
+    console.log("fullname", fullName);
+    console.log("email", email);
+    console.log("password", password);
     await User.create({
         fullName,
         email,
