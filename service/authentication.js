@@ -4,13 +4,14 @@ dotenv.config();
 
 function CreateTokenForUser(user) {
     const payload = {
+        //fullName: fullName,
         _id: user._id,
         email: user.email,
         profileImageUrl: user.profileImageUrl,
         role: user.role,
     }
-    console.log(process.env.SECRET);
-    console.log("Payload : ", payload);
+    //console.log(process.env.SECRET);
+    //console.log("Payload : ", payload);
     const token = JWT.sign(payload, process.env.SECRET);
     return token;
 };

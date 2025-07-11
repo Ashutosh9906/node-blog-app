@@ -10,18 +10,26 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Add Blog</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Ashutosh4069
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Log Out</a></li>
-          </ul>
-        </li>
-      </ul>
+        <% if (locals.user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/blog/add-new">Add Blog</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Ashutosh4069
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/user/logout">Log Out</a></li>
+            </ul>
+          </li>
+          <% } else {%>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/signup">Create Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/signin">Signin</a>
+            </li>
+            <% } %> </ul>
     </div>
   </div>
 </nav>
@@ -32,4 +40,4 @@
       <%= locals.error %>
     </div>
   </div>
-<% } %>
+  <% } %>
