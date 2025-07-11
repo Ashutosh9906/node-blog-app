@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/signin", (req, res) => {
     try {
-        console.log("Rendering signin page");
+        //console.log("Rendering signin page");
         return res.render("signin");
     }
     catch (err) {

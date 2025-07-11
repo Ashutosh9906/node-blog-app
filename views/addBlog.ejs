@@ -3,33 +3,43 @@
 
 <head>
     <%- include("./partials/head") %>
-        <title>Homepage</title>
+    <title>Homepage</title>
 </head>
 
 <body>
     <%- include("./partials/nav") %>
 
-        <div class="container mt-3">
-            <form action="/blog" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="title" class="form-label">Cover Image</label>
-                    <input type="file" class="form-control" id="coverImage" name="coverImage" aria-describedby="coverImage">
-                </div>
-                <div class="mb-3">
-                    <label for="title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" aria-describedby="title">
-                </div>
-                <div class="mb-3">
-                    <label for="body">Body</label>
-                    <textarea name="body" class="form-control" placeholder="Place blog Body here" id="body"></textarea>
-                </div>
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
+    <div class="container my-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="mb-4">Create a New Blog Post</h2>
+                <form action="/blog" method="post" enctype="multipart/form-data">
 
-        <%- include("./partials/scripts") %>
+                    <div class="mb-3">
+                        <label for="coverImage" class="form-label">Cover Image</label>
+                        <input type="file" class="form-control" id="coverImage" name="coverImage">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Enter blog title">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Body</label>
+                        <textarea name="body" class="form-control" id="body" rows="6" placeholder="Place blog body here..."></textarea>
+                    </div>
+
+                    <div class="mb-3 text-end">
+                        <button type="submit" class="btn btn-primary">Publish Blog</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include("./partials/scripts") %>
 </body>
 
 </html>
