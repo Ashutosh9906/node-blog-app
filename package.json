@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Ashutosh9906/node-blog-app#readme",
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.0",
     "ejs": "^3.1.10",

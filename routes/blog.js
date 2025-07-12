@@ -1,20 +1,22 @@
 const { Router } = require("express")
 const multer = require("multer");
 const path = require("path");
+const cloudinary = require("../utils/cloudinary")
 
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
+const { url } = require("inspector");
 
 const router = Router();
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve(`./public/uploads`));
-  },
-  filename: function (req, file, cb) {
-    const fileName = `${Date.now()}-${file.originalname}`;
-    cb(null, fileName)
-  }
+    //   destination: function (req, file, cb) {
+    //     cb(null, path.resolve(`./public/uploads`));
+    //   },
+    filename: function (req, file, cb) {
+        const fileName = `${Date.now()}-${file.originalname}`;
+        cb(null, fileName)
+    }
 });
 
 const upload = multer({ storage: storage })
@@ -36,7 +38,7 @@ router.get("/:id", async (req, res) => {
     });
 })
 
-router.post("/comment/:blogId", async(req, res) => {
+router.post("/comment/:blogId", async (req, res) => {
     const comment = await Comment.create({
         content: req.body.content,
         blogId: req.params.blogId,
@@ -46,14 +48,45 @@ router.post("/comment/:blogId", async(req, res) => {
 })
 
 router.post("/", upload.single("coverImage"), async (req, res) => {
-    const { title, body } = req.body;
-    const blog = await Blog.create({
-        body,
-        title,
-        createdBy: req.user._id,
-        coverImageUrl: `/uploads/${req.file.filename}`
-    });
-    return res.redirect(`/blog/${blog._id}`);
+    try {
+        const result = cloudinary.uploader.upload(req.file.path, function (err, result) {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: false,
+                    message: "Error"
+                })
+            }
+
+            // res.status(200).json({
+            //     success: true,
+            //     message: "Uploaded!",
+            //     data: result
+            // })
+        })
+
+        const url = cloudinary.url((await result).public_id, {
+            transformation: [
+                {
+                    quality: 'auto',
+                    fetch_format: 'auto',
+                },
+            ]
+        })
+
+        const { title, body } = req.body;
+        const blog = await Blog.create({
+            body,
+            title,
+            createdBy: req.user._id,
+            coverImageUrl: url,
+        });
+
+        return res.redirect(`/blog/${blog._id}`);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
 })
 
 module.exports = router;
