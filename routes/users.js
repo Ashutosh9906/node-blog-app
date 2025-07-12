@@ -1,5 +1,6 @@
 const { Router } = require("express")
-const User = require("../models/users")
+const User = require("../models/users");
+const { signinLimiter } = require("../middleware/ratelimiters");
 
 const router = Router();
 
@@ -17,11 +18,11 @@ router.get("/signin", (req, res) => {
 });
 
 
-router.get("/signup", (req, res) => {
-    return res.render("signup");
-});
+// router.get("/signup", (req, res) => {
+//     return res.render("signup");
+// });
 
-router.post("/signin", async (req, res) => {
+router.post("/signin", signinLimiter, async (req, res) => {
     const { email, password } = req.body;
     try {
         const token = await User.matchPasswordAndGenerateToken(email, password);
@@ -39,17 +40,17 @@ router.get("/logout", (req, res) => {
     res.clearCookie("token").redirect("/");
 });
 
-router.post("/signup", async (req, res) => {
-    const { fullName, email, password } = req.body;
-    // console.log("fullname", fullName);
-    // console.log("email", email);
-    // console.log("password", password);
-    await User.create({
-        fullName,
-        email,
-        password,
-    });
-    return res.redirect("/");
-})
+// router.post("/signup", async (req, res) => {
+//     const { fullName, email, password } = req.body;
+//     // console.log("fullname", fullName);
+//     // console.log("email", email);
+//     // console.log("password", password);
+//     await User.create({
+//         fullName,
+//         email,
+//         password,
+//     });
+//     return res.redirect("/");
+// })
 
 module.exports = router;

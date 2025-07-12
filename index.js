@@ -10,6 +10,7 @@ const Blog = require("./models/blog");
 const userRoute = require("./routes/users");
 const blogRoute = require("./routes/blog");
 const { checkForAuthenticationCookie } = require("./middleware/authentication");
+const { generalLimiter } = require("./middleware/ratelimiters");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended:false }));
 app.use(cookieParser())
 app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve("./public")));
+app.use(generalLimiter);
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
